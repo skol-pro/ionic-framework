@@ -71,6 +71,8 @@ const runTransition = async (opts: TransitionOptions): Promise<TransitionResult>
 };
 
 const afterTransition = (opts: TransitionOptions) => {
+
+
   const enteringEl = opts.enteringEl;
   const leavingEl = opts.leavingEl;
   enteringEl.classList.remove('ion-page-invisible');
@@ -78,6 +80,41 @@ const afterTransition = (opts: TransitionOptions) => {
   if (leavingEl !== undefined) {
     leavingEl.classList.remove('ion-page-invisible');
     leavingEl.style.removeProperty('pointer-events');
+  }
+
+
+// moves focus to top of view
+// need to account for existing tab index values
+// need to account for already focused elements inside of enteringEl
+// should return focus when going back
+// button can be read multiple times (what voiceover is supposed to do when you double tap element, but moving focus should interrupt it)
+
+  const FOCUS_TYPE = 'content';
+  let elToFocus = enteringEl;
+
+  switch (FOCUS_TYPE) {
+    case "content":
+      const content = document.querySelector('ion-content');
+      if (content) {
+        elToFocus = content;
+      }
+      break;
+    case "none":
+      elToFocus = undefined;
+      break;
+    case "page":
+      break;
+    default:
+      const el = document.querySelector(FOCUS_TYPE);
+      if (el) {
+        elToFocus = el;
+      }
+      break;
+  }
+  console.log('focus entering el', FOCUS_TYPE);
+  if (elToFocus) {
+    elToFocus.tabIndex = -1
+    elToFocus.focus();
   }
 };
 
