@@ -89,32 +89,34 @@ const afterTransition = (opts: TransitionOptions) => {
 // should return focus when going back
 // button can be read multiple times (what voiceover is supposed to do when you double tap element, but moving focus should interrupt it)
 
-  const FOCUS_TYPE = 'content';
-  let elToFocus = enteringEl;
+  const FOCUS_TYPE: string = 'content';
+  let elToFocus: any = enteringEl;
 
   switch (FOCUS_TYPE) {
     case "content":
-      const content = document.querySelector('ion-content');
+      const content = enteringEl.querySelector('ion-content');
       if (content) {
         elToFocus = content;
       }
       break;
     case "none":
-      elToFocus = undefined;
+      elToFocus = null;
       break;
     case "page":
       break;
     default:
-      const el = document.querySelector(FOCUS_TYPE);
+      const el = enteringEl.querySelector(FOCUS_TYPE);
       if (el) {
         elToFocus = el;
       }
       break;
   }
-  console.log('focus entering el', FOCUS_TYPE);
   if (elToFocus) {
-    elToFocus.tabIndex = -1
+    setTimeout(() => {
+    elToFocus.tabIndex = -1;
     elToFocus.focus();
+    console.log('focus entering el', FOCUS_TYPE, elToFocus, document.activeElement);
+  }, 1000);
   }
 };
 
