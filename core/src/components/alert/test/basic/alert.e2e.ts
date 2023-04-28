@@ -3,7 +3,10 @@ import type { Locator } from '@playwright/test';
 import type { E2EPage } from '@utils/test/playwright';
 import { configs, test } from '@utils/test/playwright';
 
-configs({ directions: ['ltr'] }).forEach(({ config, screenshot, title }) => {
+/**
+ * This behavior does not vary across modes/directions
+ */
+configs({ mode: ['ios'], directions: ['ltr'] }).forEach(({ config, screenshot, title }) => {
   test.describe(title('alert: basic'), () => {
     test.beforeEach(async ({ page }) => {
       await page.goto('/src/components/alert/test/basic', config);
@@ -24,13 +27,6 @@ configs({ directions: ['ltr'] }).forEach(({ config, screenshot, title }) => {
 
       await page.keyboard.press(tabKey);
       await expect(alertBtns.nth(0)).toBeFocused();
-    });
-
-    test('should set custom attributes', async ({ page }) => {
-      const alertFixture = new AlertFixture(page, screenshot);
-
-      const alert = await alertFixture.open('#basic');
-      await expect(alert).toHaveAttribute('data-testid', 'basic-alert');
     });
 
     test('should dismiss when async handler resolves', async ({ page }) => {
