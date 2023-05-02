@@ -324,6 +324,7 @@ ion-picker-column-internal {
  * and horizontally within its grid cell.
  */
 :host .calendar-day {
+  @include border-radius(32px, 32px, 32px, 32px);
   @include padding(0px, 0px, 0px, 0px);
   @include margin(0px, 0px, 0px, 0px);
 
@@ -348,24 +349,14 @@ ion-picker-column-internal {
   appearance: none;
 
   z-index: 0;
+
+  aspect-ratio: 1 / 1;
 }
 
 :host .calendar-day[disabled] {
   pointer-events: none;
 
   opacity: 0.4;
-}
-
-.calendar-day-highlight {
-  @include border-radius(32px, 32px, 32px, 32px);
-  @include padding(4px, 4px, 4px, 4px);
-
-  position: absolute;
-
-  width: 32px;
-  height: 32px;
-
-  z-index: -1;
 }
 
 // Time / Header

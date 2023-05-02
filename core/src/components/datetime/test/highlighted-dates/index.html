@@ -46,65 +46,53 @@
       <ion-content class="ion-padding">
         <div class="grid">
           <div class="grid-item">
-            <h2>With Array</h2>
-            <ion-datetime locale="en-US" id="withArray" presentation="date" value="2023-01-01"></ion-datetime>
+            <h2>iOS</h2>
+            <ion-datetime
+              presentation="date"
+              value="2023-05-01"
+              mode="ios"
+            ></ion-datetime>
           </div>
           <div class="grid-item">
-            <h2>With Callback</h2>
-            <ion-datetime locale="en-US" id="withCallback" presentation="date" value="2023-01-01"></ion-datetime>
-          </div>
-          <div class="grid-item">
-            <h2>Highlight Today</h2>
-            <ion-datetime locale="en-US" id="highlightToday" presentation="date"></ion-datetime>
-          </div>
+            <h2>MD</h2>
+            <ion-datetime
+              presentation="date"
+              value="2023-05-01"
+              mode="md"
+            ></ion-datetime>
         </div>
       </ion-content>
     </ion-app>
 
     <script>
-      document.querySelector('#withArray').highlightedDates = [
+      document.querySelectorAll('ion-datetime').forEach((d) => {d.highlightedDates = [
         {
-          date: '2023-01-02',
-          textColor: 'purple',
-          backgroundColor: 'pink',
+          date: '2023-05-01',
+          textColor: '#800080',
+          backgroundColor: '#ffc0cb',
         },
         {
-          date: '2023-01-04',
-          textColor: 'firebrick',
-          backgroundColor: 'salmon',
+          date: '2023-05-05',
+          textColor: '#800080',
+          backgroundColor: '#ffc0cb',
         },
         {
-          date: '2023-01-06',
-          textColor: 'blue',
-          backgroundColor: 'lightblue',
+          date: '2023-05-10',
+          textColor: '#09721b',
+          backgroundColor: '#c8e5d0',
         },
-      ];
-
-      document.querySelector('#withCallback').highlightedDates = (isoString) => {
-        const date = new Date(isoString);
-        const utcDay = date.getUTCDate();
-        if (utcDay % 5 === 0) {
-          return {
-            textColor: 'purple',
-            backgroundColor: 'pink',
-          };
+        {
+          date: '2023-05-20',
+          textColor: 'var(--ion-color-secondary-contrast)',
+          backgroundColor: 'var(--ion-color-secondary)',
+        },
+        {
+          date: '2023-05-23',
+          textColor: 'rgb(68, 10, 184)',
+          backgroundColor: 'rgb(211, 200, 229)'
         }
-
-        if (utcDay % 3 === 0) {
-          return {
-            textColor: 'blue',
-            backgroundColor: 'lightblue',
-          };
-        }
-      };
-
-      document.querySelector('#highlightToday').highlightedDates = [
-        {
-          date: new Date().toISOString().split('T')[0],
-          textColor: 'purple',
-          backgroundColor: 'pink',
-        },
       ];
+    });
     </script>
   </body>
 </html>
