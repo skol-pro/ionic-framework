@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Input - Slot POC</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <link href="../../../../../css/ionic.bundle.css" rel="stylesheet" />
+    <link href="../../../../../scripts/testing/styles.css" rel="stylesheet" />
+    <script src="../../../../../scripts/testing/scripts.js"></script>
+    <script nomodule src="../../../../../dist/ionic/ionic.js"></script>
+    <script type="module" src="../../../../../dist/ionic/ionic.esm.js"></script>
+    <script type="module">
+      import { modalController, createAnimation } from '../../../../../dist/ionic/index.esm.js';
+      window.modalController = modalController;
+    </script>
+    <style>
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(250px, 1fr));
+        grid-row-gap: 20px;
+        grid-column-gap: 20px;
+      }
+      h2 {
+        font-size: 12px;
+        font-weight: normal;
+
+        color: #6f7378;
+
+        margin-top: 10px;
+      }
+      @media screen and (max-width: 800px) {
+        .grid {
+          grid-template-columns: 1fr;
+          padding: 0;
+        }
+      }
+
+      .required {
+        color: red;
+      }
+    </style>
+  </head>
+
+  <body>
+    <ion-app>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Input - Slot POC</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content id="content" class="ion-padding">
+        <h2>Async</h2>
+        <div class="grid">
+          <div class="grid-item">
+            <h2>Label Added</h2>
+            <ion-input id="async-add" fill="solid" label-placement="floating"></ion-input>
+          </div>
+          <div class="grid-item">
+            <h2>Label Updated</h2>
+            <ion-input id="async-update" fill="solid" label-placement="floating">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+          <div class="grid-item">
+            <h2>Label Removed</h2>
+            <ion-input id="async-remove" fill="solid" label-placement="floating">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+
+          <div class="grid-item">
+            <h2>Label Removed + Re-added</h2>
+            <ion-input id="async-remove-add" fill="solid" label-placement="floating">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+
+          <div class="grid-item">
+            <h2>Teleport With Async Label</h2>
+            <ion-button id="open-modal" onclick="openModal()">Open Modal</ion-button>
+          </div>
+        </div>
+
+        <h2>No Fill</h2>
+        <div class="grid">
+          <div class="grid-item">
+            <h2>Label Placement - Start</h2>
+            <ion-input label-placement="start">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+
+          <div class="grid-item">
+            <h2>Label Placement - End</h2>
+            <ion-input label-placement="end">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+
+          <div class="grid-item">
+            <h2>Label Placement - Fixed</h2>
+            <ion-input label-placement="fixed">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+
+          <div class="grid-item">
+            <h2>Label Placement - Floating</h2>
+            <ion-input label-placement="floating">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+
+          <div class="grid-item">
+            <h2>Label Placement - Stacked</h2>
+            <ion-input label-placement="stacked">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+        </div>
+
+        <h2>Solid</h2>
+        <div class="grid">
+          <div class="grid-item">
+            <h2>Label Placement - Start</h2>
+            <ion-input fill="solid" label-placement="start">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+
+          <div class="grid-item">
+            <h2>Label Placement - End</h2>
+            <ion-input fill="solid" label-placement="end">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+
+          <div class="grid-item">
+            <h2>Label Placement - Fixed</h2>
+            <ion-input fill="solid" label-placement="fixed">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+
+          <div class="grid-item">
+            <h2>Label Placement - Floating</h2>
+            <ion-input fill="solid" label-placement="floating">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+
+          <div class="grid-item">
+            <h2>Label Placement - Stacked</h2>
+            <ion-input fill="solid" label-placement="stacked">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+        </div>
+
+        <h2>Outline</h2>
+        <div class="grid">
+          <div class="grid-item">
+            <h2>Label Placement - Start</h2>
+            <ion-input fill="outline" label-placement="start">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+
+          <div class="grid-item">
+            <h2>Label Placement - End</h2>
+            <ion-input fill="outline" label-placement="end">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+
+          <div class="grid-item">
+            <h2>Label Placement - Fixed</h2>
+            <ion-input fill="outline" label-placement="fixed">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+
+          <div class="grid-item">
+            <h2>Label Placement - Floating</h2>
+            <ion-input fill="outline" label-placement="floating">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+
+          <div class="grid-item">
+            <h2>Label Placement - Stacked</h2>
+            <ion-input fill="outline" label-placement="stacked">
+              <div slot="label">Email<span class="required">*</span></div>
+            </ion-input>
+          </div>
+        </div>
+      </ion-content>
+    </ion-app>
+
+    <script>
+
+      const openModal = async () => {
+        const input = document.createElement('ion-input');
+
+
+        const modal = await modalController.create({
+          component: input,
+        });
+
+        const div = document.createElement('div');
+        div.slot = 'label';
+        div.innerHTML = 'First Name<span class="required">*</span>';
+
+        input.appendChild(div);
+
+        await modal.present();
+      }
+
+      const inputAdd = document.querySelector('#async-add');
+      const inputUpdate = document.querySelector('#async-update');
+      const inputRemove = document.querySelector('#async-remove');
+      const inputRemoveAdd = document.querySelector('#async-remove-add');
+
+      setTimeout(() => {
+        const removeSlot = inputRemove.querySelector('[slot="label"]');
+        removeSlot.remove();
+
+        const removeAddSlot = inputRemoveAdd.querySelector('[slot="label"]');
+        removeAddSlot.remove();
+
+        const updateSlot = inputUpdate.querySelector('[slot="label"]');
+        updateSlot.innerHTML = 'First Name<span class="required">*</span>';
+
+        const div = document.createElement('div');
+        div.slot = 'label';
+        div.innerHTML = 'First Name<span class="required">*</span>';
+
+        inputAdd.appendChild(div);
+
+        setTimeout(() => {
+          const newDiv = document.createElement('div');
+          newDiv.slot = 'label';
+          newDiv.innerHTML = 'First Name<span class="required">*</span>';
+          inputRemoveAdd.appendChild(newDiv);
+        }, 2000);
+      }, 1000);
+    </script>
+  </body>
+</html>

@@ -1,5 +1,5 @@
 import type { ComponentInterface, EventEmitter } from '@stencil/core';
-import { Build, Component, Element, Event, Host, Method, Prop, State, Watch, h } from '@stencil/core';
+import { Build, Component, Element, Event, Host, Method, Prop, State, Watch, h, forceUpdate } from '@stencil/core';
 import { closeCircle, closeSharp } from 'ionicons/icons';
 
 import { getIonMode } from '../../global/ionic-global';
@@ -367,6 +367,38 @@ export class Input implements ComponentInterface {
 
   componentDidLoad() {
     this.originalIonInput = this.ionInput;
+
+    const mo = new MutationObserver((entries) => {
+      for (const entry of entries) {
+
+        if (entry.addedNodes.length > 0) {
+          for (const node of entry.addedNodes) {
+            if ((node as HTMLElement).slot === 'label') {
+              forceUpdate(this);
+              return;
+            }
+          }
+        }
+
+        if (entry.removedNodes.length > 0) {
+          for (const node of entry.addedNodes) {
+            if ((node as HTMLElement).slot === 'label') {
+              forceUpdate(this);
+              return;
+            }
+          }
+        }
+
+      }
+    });
+
+    mo.observe(this.el, {
+      attributes: true,
+      childList: true,
+      subtree: true,
+      characterData: true
+    })
+
   }
 
   disconnectedCallback() {
@@ -577,14 +609,10 @@ export class Input implements ComponentInterface {
   }
 
   private renderLabel() {
-    const { label } = this;
-    if (label === undefined) {
-      return;
-    }
 
     return (
       <div class="label-text-wrapper">
-        <div class="label-text">{this.label}</div>
+        <div class="label-text"><slot name="label"></slot></div>
       </div>
     );
   }
