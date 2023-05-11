@@ -114,8 +114,6 @@ export class DatetimeButton implements ComponentInterface {
     }
 
     componentOnReady(datetimeEl, () => {
-      const datetimePresentation = (this.datetimePresentation = datetimeEl.presentation || 'date-time');
-
       /**
        * Set the initial display
        * in the rendered buttons.
@@ -126,8 +124,14 @@ export class DatetimeButton implements ComponentInterface {
        * to re-render the displayed
        * text in the buttons.
        */
-      this.setDateTimeText();
-      addEventListener(datetimeEl, 'ionValueChange', this.setDateTimeText);
+      this.setPresentationAndText();
+
+      /**
+       * ion-datetime-button needs to be linked to
+       * ion-datetime's rendering so it can respond to
+       * any property changes such as value, presentation, or locale.
+       */
+      addEventListener(datetimeEl, 'ionRender', this.setPresentationAndText);
 
       /**
        * Configure the initial selected button
@@ -138,7 +142,7 @@ export class DatetimeButton implements ComponentInterface {
        * need to click the accordion header to show
        * the datetime.
        */
-      switch (datetimePresentation) {
+      switch (this.datetimePresentation) {
         case 'date-time':
         case 'date':
         case 'month-year':
@@ -177,8 +181,8 @@ export class DatetimeButton implements ComponentInterface {
    * ion-datetime and then format it according
    * to the locale specified on ion-datetime.
    */
-  private setDateTimeText = () => {
-    const { datetimeEl, datetimePresentation } = this;
+  private setPresentationAndText = () => {
+    const { datetimeEl } = this;
 
     if (!datetimeEl) {
       return;
@@ -205,6 +209,12 @@ export class DatetimeButton implements ComponentInterface {
     const use24Hour = is24Hour(locale, hourCycle);
 
     this.dateText = this.timeText = undefined;
+
+    /**
+     * Update the cached presentation to equal the
+     * datetime's current presentation value.
+     */
+    const datetimePresentation = (this.datetimePresentation = datetimeEl.presentation || 'date-time');
 
     switch (datetimePresentation) {
       case 'date-time':
