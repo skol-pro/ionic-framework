@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
 import { configs, test } from '@utils/test/playwright';
+import type { E2ELocator } from '@utils/test/playwright';
 
 /**
  * The tested behavior does not
@@ -206,6 +207,36 @@ configs({ modes: ['md'], directions: ['ltr'] }).forEach(({ title, config }) => {
 
       await expect(page.locator('#date-button')).toContainText('Jan 1, 2022 6:30 AM');
       await expect(page.locator('#time-button')).not.toBeVisible();
+    });
+  });
+
+  test.describe(title('datetime-button: reactivity'), () => {
+    test('should update datetime-button when presentation property changes on datetime', async ({ page }) => {
+      await page.setContent(
+        `
+        <ion-datetime-button datetime="datetime"></ion-datetime-button>
+        <ion-datetime locale="en-US" id="datetime" value="2022-01-01T06:30:00" presentation="date-time"></ion-datetime>
+      `,
+        config
+      );
+      await page.waitForSelector('.datetime-ready');
+
+      const datetimeButton = page.locator('ion-datetime-button');
+      const datetime = page.locator('ion-datetime') as E2ELocator;
+      const ionRender = await datetime.spyOnEvent('ionRender');
+
+      const dateButton = datetimeButton.locator('#date-button');
+      const timeButton = datetimeButton.locator('#time-button');
+
+      await expect(dateButton).toBeVisible();
+      await expect(timeButton).toBeVisible();
+
+      await datetime.evaluate((el: HTMLIonDatetimeElement) => (el.presentation = 'year'));
+
+      await ionRender.next();
+
+      await expect(dateButton).toBeVisible();
+      await expect(timeButton).toBeHidden();
     });
   });
 });
