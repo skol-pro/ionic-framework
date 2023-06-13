@@ -46,6 +46,7 @@ export class Loading implements ComponentInterface, OverlayInterface {
   private customHTMLEnabled = config.get('innerHTMLTemplatesEnabled', ENABLE_HTML_CONTENT_DEFAULT);
   private durationTimeout?: ReturnType<typeof setTimeout>;
   private currentTransition?: Promise<any>;
+  private waitPromise?: Promise<void>;
 
   presented = false;
   lastFocus?: HTMLElement;
@@ -203,6 +204,17 @@ export class Loading implements ComponentInterface, OverlayInterface {
    */
   @Event({ eventName: 'didDismiss' }) didDismissShorthand!: EventEmitter<OverlayEventDetail>;
 
+  private async lock() {
+    const p = this.waitPromise;
+    let resolve!: () => void;
+    this.waitPromise = new Promise((r) => (resolve = r));
+
+    if (p !== undefined) {
+      await p;
+    }
+    return resolve;
+  }
+
   connectedCallback() {
     prepareOverlay(this.el);
     this.triggerChanged();
@@ -235,6 +247,8 @@ export class Loading implements ComponentInterface, OverlayInterface {
    */
   @Method()
   async present(): Promise<void> {
+    const unlock = await this.lock();
+
     await this.delegateController.attachViewToDom();
 
     this.currentTransition = present(this, 'loadingEnter', iosEnterAnimation, mdEnterAnimation);
@@ -246,6 +260,8 @@ export class Loading implements ComponentInterface, OverlayInterface {
     }
 
     this.currentTransition = undefined;
+
+    unlock();
   }
 
   /**
@@ -259,6 +275,8 @@ export class Loading implements ComponentInterface, OverlayInterface {
    */
   @Method()
   async dismiss(data?: any, role?: string): Promise<boolean> {
+    const unlock = await this.lock();
+
     if (this.durationTimeout) {
       clearTimeout(this.durationTimeout);
     }
@@ -269,6 +287,8 @@ export class Loading implements ComponentInterface, OverlayInterface {
     if (dismissed) {
       this.delegateController.removeViewFromDom();
     }
+
+    unlock();
 
     return dismissed;
   }
