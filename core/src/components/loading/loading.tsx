@@ -235,18 +235,6 @@ export class Loading implements ComponentInterface, OverlayInterface {
    */
   @Method()
   async present(): Promise<void> {
-    /**
-     * When using an inline loading indicator
-     * and dismissing a loading indicator it is possible to
-     * quickly present the loading indicator while it is
-     * dismissing. We need to await any current
-     * transition to allow the dismiss to finish
-     * before presenting again.
-     */
-    if (this.currentTransition !== undefined) {
-      await this.currentTransition;
-    }
-
     await this.delegateController.attachViewToDom();
 
     this.currentTransition = present(this, 'loadingEnter', iosEnterAnimation, mdEnterAnimation);
