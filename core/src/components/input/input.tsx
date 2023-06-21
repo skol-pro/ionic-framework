@@ -39,6 +39,11 @@ export class Input implements ComponentInterface {
   private notchController?: NotchController;
   private notchSpacerEl: HTMLElement | undefined;
 
+  private resolveFirstLoad!: () => void;
+  private firstLoadPromise: Promise<void> = new Promise((resolve) => {
+    this.resolveFirstLoad = resolve;
+  });
+
   // This flag ensures we log the deprecation warning at most once.
   private hasLoggedDeprecationWarning = false;
   private originalIonInput?: EventEmitter<InputInputEventDetail>;
@@ -384,6 +389,7 @@ export class Input implements ComponentInterface {
 
   componentDidLoad() {
     this.originalIonInput = this.ionInput;
+    this.resolveFirstLoad();
   }
 
   componentDidRender() {
@@ -431,8 +437,10 @@ export class Input implements ComponentInterface {
    * Returns the native `<input>` element used under the hood.
    */
   @Method()
-  getInputElement(): Promise<HTMLInputElement> {
-    return Promise.resolve(this.nativeInput!);
+  async getInputElement(): Promise<HTMLInputElement> {
+    await this.firstLoadPromise;
+
+    return this.nativeInput!;
   }
 
   /**
